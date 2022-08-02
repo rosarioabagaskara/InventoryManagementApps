@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btnHome"
+        android:title="Home"
+        android:contentDescription="Use to navigate to home menu"
+        android:icon="@drawable/ic_baseline_home_24"
+        />
+    <item
+        android:id="@+id/btnItem"
+        android:title="Item"
+        android:contentDescription="Use to navigate to add item menu"
+        android:icon="@drawable/ic_baseline_local_grocery_store_24"
+        />
+    <item
+        android:id="@+id/btnReport"
+        android:title="Report"
+        android:contentDescription="Use to navigate to report menu"
+        android:icon="@drawable/ic_baseline_assessment_24"
+        />
+</menu>
