@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="textColorBlue">#1B4965</color>
     <color name="appTheme">#5FA8D3</color>
+    <color name="backgroundCardview">#CFD2D5</color>
 </resources>
