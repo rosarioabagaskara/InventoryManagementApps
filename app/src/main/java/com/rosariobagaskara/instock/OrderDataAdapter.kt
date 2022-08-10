@@ -10,7 +10,7 @@ class OrderDataAdapter(private val orderList : ArrayList<OrderData>): RecyclerVi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item,parent,false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_order,parent,false)
         return MyViewHolder(itemView)
     }
 
@@ -18,7 +18,7 @@ class OrderDataAdapter(private val orderList : ArrayList<OrderData>): RecyclerVi
 
         val currentItem = orderList[position]
 
-        holder.orderNumber.text = currentItem.orderNumber.toString()
+        holder.orderNumber.text = currentItem.orderNumber
         holder.dateOrder.text = currentItem.dateOrder
         holder.namaPemesan.text = currentItem.namaPemesan
         holder.item.text = currentItem.item

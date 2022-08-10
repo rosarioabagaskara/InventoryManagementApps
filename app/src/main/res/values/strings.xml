@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">In Stock App</string>
     <string name="mainMenuScrollView">Main menu to show list orders</string>
-    <string name="floatingActionDesc">Use to add new order</string>
+    <string name="floatingActionOrderDesc">Use to add new order</string>
+    <string name="floatingActionItemDesc">Use to add new item</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
