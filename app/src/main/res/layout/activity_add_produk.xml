@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddItemActivity">
+    tools:context=".AddProdukActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -19,7 +19,7 @@
 
 
         <EditText
-            android:id="@+id/addItemNameValue"
+            android:id="@+id/addProdukNameValue"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,21 +28,30 @@
             android:minHeight="48dp"
             android:text="Nama Barang" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Jenis Item" />
+
         <EditText
-            android:id="@+id/editTextNumberDecimal"
+            android:id="@+id/editTextLiterPerGalon"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:text="Quantity" />
+            android:visibility="gone"
+            android:text="Liter Per Galon" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="Add Item" />
 
 

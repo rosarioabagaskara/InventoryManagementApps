@@ -2,6 +2,7 @@ package com.rosariobagaskara.instock
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.rosariobagaskara.instock.databinding.ActivityMainBinding
 
@@ -17,10 +18,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.btnHome -> replaceFragment(HomeFragment())
-                R.id.btnItem -> replaceFragment(ItemFragment())
-
+                R.id.btnProduk -> replaceFragment(ProdukFragment())
+                R.id.btnStock -> replaceFragment(StockFragment())
                 else -> {
-
                 }
             }
             true
@@ -33,17 +33,4 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
     }
-
-//    override fun onBackPressed() {
-//        val currentFragment = this.supportFragmentManager.findFragmentById(R.id.frame_layout)
-//        if(currentFragment is ItemFragment){
-//            supportFragmentManager.beginTransaction().apply {
-//                replace(R.id.frame_layout, HomeFragment())
-//                commit()
-//            }
-//        }else{
-//            super.onBackPressed()
-//        }
-//
-//    }
 }

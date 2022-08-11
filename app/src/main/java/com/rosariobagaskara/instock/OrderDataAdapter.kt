@@ -22,7 +22,7 @@ class OrderDataAdapter(private val orderList : ArrayList<OrderData>): RecyclerVi
         holder.dateOrder.text = currentItem.dateOrder
         holder.namaPemesan.text = currentItem.namaPemesan
         holder.item.text = currentItem.item
-        holder.itemNumber.text = currentItem.itemNumber
+        holder.itemNumber.text = currentItem.itemNumber.toString()
 
     }
 
