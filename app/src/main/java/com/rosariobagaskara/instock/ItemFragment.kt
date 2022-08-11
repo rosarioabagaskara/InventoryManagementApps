@@ -1,13 +1,17 @@
 package com.rosariobagaskara.instock
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +24,7 @@ private lateinit var arrayList: ArrayList<ItemData>
 lateinit var itemName: Array<String>
 lateinit var itemQuantity: Array<String>
 lateinit var itemId: Array<Int>
+lateinit var addItem: FloatingActionButton
 /**
  * A simple [Fragment] subclass.
  * Use the [Item.newInstance] factory method to
@@ -68,7 +73,18 @@ class ItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Move to AddItemActivity
+        addItem = view.findViewById(R.id.addItem)
+        addItem.setOnClickListener {
+            val intent = Intent(activity, AddItemActivity::class.java)
+            activity?.startActivity(intent)
+        }
+
+        //Add item data value to arrayList
         itemData()
+
+        //get arrayList value and show the value in recycleView
         val layoutManager = LinearLayoutManager(context)
         newRecyclerView = view.findViewById(R.id.recyclerViewItem)
         newRecyclerView.layoutManager = layoutManager

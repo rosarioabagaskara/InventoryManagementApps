@@ -70,7 +70,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Add item data value to arrayList
         orderData()
+
+        //get arrayList value and show the value in recycleView
         val layoutManager = LinearLayoutManager(context)
         newRecyclerView = view.findViewById(R.id.recyclerView)
         newRecyclerView.layoutManager = layoutManager

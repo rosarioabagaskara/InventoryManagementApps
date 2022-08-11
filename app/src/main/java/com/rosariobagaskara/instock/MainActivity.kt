@@ -33,4 +33,17 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
     }
+
+//    override fun onBackPressed() {
+//        val currentFragment = this.supportFragmentManager.findFragmentById(R.id.frame_layout)
+//        if(currentFragment is ItemFragment){
+//            supportFragmentManager.beginTransaction().apply {
+//                replace(R.id.frame_layout, HomeFragment())
+//                commit()
+//            }
+//        }else{
+//            super.onBackPressed()
+//        }
+//
+//    }
 }
