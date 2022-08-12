@@ -16,28 +16,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="20dp">
-
-
         <EditText
             android:id="@+id/addProdukNameValue"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="Nama Barang" />
-
+            android:hint="Nama Produk" />
         <TextView
-            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:text="Jenis Produk"/>
+        <Spinner
+            android:id="@+id/spinnerJenisProduk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Jenis Item" />
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/editTextLiterPerGalon"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -45,16 +45,39 @@
             android:inputType="numberDecimal"
             android:minHeight="48dp"
             android:visibility="gone"
-            android:text="Liter Per Galon" />
-
-        <Button
-            android:id="@+id/button"
+            android:hint="Liter Per Galon" />
+        
+        <LinearLayout
+            android:id="@+id/layoutListProduk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Add Item" />
+            android:orientation="vertical">
 
 
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/tambahItemProduk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Tambah Item" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_margin="20dp">
+
+        <Button
+            android:id="@+id/submitOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,53 +8,50 @@
     tools:context=".AddStockActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="20dp">
-
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/addItemNameValue"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="Nama Barang" />
+            android:hint="Nama Barang" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Jenis Item" />
 
         <EditText
             android:id="@+id/editTextNumberDecimal"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:visibility="gone"
-            android:text="Quantity" />
+            android:hint="Jumlah Barang" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_margin="20dp">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/submitOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Add Item" />
-
-
+            android:text="Submit" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
