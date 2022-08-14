@@ -9,7 +9,6 @@ class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_produk)
-        val listProdukItem: Array<String> = arrayOf("Apel","Semangka")
         val listJenisProduk: Array<String> = arrayOf(" ","Galon","Laundry")
         val addItemBtn = findViewById<Button>(R.id.tambahItemProduk)
         val layoutListProduk = findViewById<LinearLayout>(R.id.layoutListProduk)
@@ -19,6 +18,7 @@ class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
         spinnerJenisProduk.onItemSelectedListener = this
 
         addItemBtn.setOnClickListener {
+            val listProdukItem: Array<String> = arrayOf("Apel","Semangka")
             val listAddItem = layoutInflater.inflate(R.layout.list_produk_add_item, null, false)
 
             val spinnerProdukItem : Spinner = listAddItem.findViewById(R.id.spinnerAddProdukItem)

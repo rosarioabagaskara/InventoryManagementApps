@@ -1,5 +1,6 @@
 package com.rosariobagaskara.instock
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,12 @@ class OrderDataAdapter(private val orderList : ArrayList<OrderData>): RecyclerVi
         holder.orderNumber.text = currentItem.orderNumber
         holder.dateOrder.text = currentItem.dateOrder
         holder.namaPemesan.text = currentItem.namaPemesan
+        holder.statusOrder.text = currentItem.statusOrder
+        if(holder.statusOrder.text == "Canceled"){
+            holder.statusOrder.setTextColor(Color.parseColor("#FF0000"))
+        }else if(holder.statusOrder.text == "Success"){
+            holder.statusOrder.setTextColor(Color.parseColor("#4CAF50"))
+        }
         holder.item.text = currentItem.item
         holder.itemNumber.text = currentItem.itemNumber.toString()
 
@@ -35,6 +42,7 @@ class OrderDataAdapter(private val orderList : ArrayList<OrderData>): RecyclerVi
         val orderNumber: TextView = itemView.findViewById(R.id.orderNumberTextView)
         val dateOrder: TextView = itemView.findViewById(R.id.dateTextView)
         val namaPemesan: TextView = itemView.findViewById(R.id.namaPemesanTextView)
+        val statusOrder: TextView = itemView.findViewById(R.id.statusOrderTextView)
         val item: TextView = itemView.findViewById(R.id.itemTextView)
         val itemNumber: TextView = itemView.findViewById(R.id.itemNumberTextView)
     }

@@ -7,50 +7,58 @@
     tools:context=".AddOrderActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/layoutListAddOrderProduk"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
             android:orientation="vertical">
 
+
             <EditText
                 android:id="@+id/addOrderNamaPelangganValue"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:ems="10"
+                android:hint="Nama Pelanggan"
                 android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:text="Nama Pelanggan" />
-
+                android:minHeight="48dp" />
 
             <Button
                 android:id="@+id/tambahProduk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#7AF47F"
                 android:text="Tambah Produk" />
-
 
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:gravity="bottom"
-        android:layout_margin="20dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="20dp">
 
         <Button
             android:id="@+id/submitOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/appTheme"
+            android:textStyle="bold"
             android:text="Submit" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

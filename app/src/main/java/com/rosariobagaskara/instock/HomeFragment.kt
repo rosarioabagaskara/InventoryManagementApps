@@ -1,5 +1,6 @@
 package com.rosariobagaskara.instock
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,8 +22,10 @@ lateinit var orderId: Array<Int>
 lateinit var orderNumber: Array<String>
 lateinit var orderDate: Array<String>
 lateinit var namaPemesan: Array<String>
+lateinit var statusOrder: Array<String>
 lateinit var item: Array<String>
 lateinit var itemNumber: Array<Int>
+lateinit var addOrderButton: FloatingActionButton
 
 /**
  * A simple [Fragment] subclass.
@@ -72,6 +76,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addOrderButton = view.findViewById(R.id.addOrder)
+        addOrderButton.setOnClickListener {
+            val intent = Intent(activity, AddOrderActivity::class.java)
+            startActivity(intent)
+        }
         //Add item data value to arrayList
         orderData()
 
@@ -90,6 +99,7 @@ class HomeFragment : Fragment() {
         orderNumber = arrayOf("Order #1","Order #2","Order #3","Order #4","Order #5","Order #6","Order #7","Order #8", "Order #9","Order #10","Order #11","Order #12","Order #13","Order #14","Order #15","Order #16")
         orderDate = arrayOf("02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022")
         namaPemesan = arrayOf("Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha")
+        statusOrder = arrayOf("Success","Success","Success","Success","Success","Success","Success","Success", "Success","Success","Success","Success","Success","Success","Success","Canceled")
         item = arrayOf("Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon")
         itemNumber = arrayOf(1,1,2,4,1,1,2,4,1,1,2,4,1,1,2,4)
 
@@ -97,7 +107,7 @@ class HomeFragment : Fragment() {
         arrayList = arrayListOf<OrderData>()
 
         for(i in orderId.indices){
-            val orderData = OrderData(orderId[i], orderNumber[i], orderDate[i], namaPemesan[i], item[i], itemNumber[i])
+            val orderData = OrderData(orderId[i], orderNumber[i], orderDate[i], namaPemesan[i], statusOrder[i], item[i], itemNumber[i])
             arrayList.add(orderData)
         }
     }
