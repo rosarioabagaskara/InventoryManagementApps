@@ -1,8 +1,11 @@
 package com.rosariobagaskara.instock
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -12,13 +15,13 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         private val TABLE_STOK = "StokTable"
         private val stokId = "stok_id"
-        private val stockName = "stok_name"
-        private val stockQuantity = "stok_quantity"
+        private val stokName = "stok_name"
+        private val stokQuantity = "stok_quantity"
 
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-        val createStokTable = ("CREATE TABLE $TABLE_STOK ($stokId INTEGER_PRIMARY_KEY, $stockName TEXT, $stockQuantity INTEGER)")
+        val createStokTable = ("CREATE TABLE $TABLE_STOK ($stokId INTEGER_PRIMARY_KEY, $stokName TEXT, $stokQuantity INTEGER)")
         p0?.execSQL(createStokTable)
     }
 
@@ -32,13 +35,44 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         val contentValue = ContentValues()
 
-        contentValue.put(stockName, stockData.stockName)
-        contentValue.put(stockQuantity, stockData.stockQuantity)
+        contentValue.put(stokName, stockData.stockName)
+        contentValue.put(stokQuantity, stockData.stockQuantity)
 
         val success = db.insert(TABLE_STOK, null, contentValue)
 
         db.close()
         return success
+    }
 
+    @SuppressLint("Range")
+    fun viewItemStock(): ArrayList<StockData>{
+        val itemStockList : ArrayList<StockData> = ArrayList<StockData>()
+
+        val selectQuery = "SELECT * FROM $TABLE_STOK"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+
+        var id: Int
+        var name: String
+        var quantity: Int
+
+        if(cursor.moveToFirst()){
+            do{
+                id = cursor.getInt(cursor.getColumnIndex(stokId))
+                name = cursor.getString(cursor.getColumnIndex(stokName))
+                quantity = cursor.getInt(cursor.getColumnIndex(stokQuantity))
+
+                val sd = StockData(stockId = id, stockName = name, stockQuantity = quantity)
+                itemStockList.add(sd)
+            }while (cursor.moveToNext())
+        }
+        return itemStockList
     }
 }

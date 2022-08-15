@@ -17,10 +17,6 @@ private const val ARG_PARAM2 = "param2"
 
 private lateinit var stockDataAdapter : StockDataAdapter
 private lateinit var newRecyclerView : RecyclerView
-private lateinit var arrayList: ArrayList<StockData>
-lateinit var stockId: Array<Int>
-lateinit var stockName: Array<String>
-lateinit var stockQuantity: Array<Int>
 lateinit var addStock: FloatingActionButton
 /**
  * A simple [Fragment] subclass.
@@ -78,29 +74,26 @@ class StockFragment : Fragment() {
             activity?.startActivity(intent)
         }
 
-        //Add stock data value to arrayList
-        stockData()
+        if(getItemList().size > 0 ){
+            //get arrayList value and show the value in recycleView
+            val layoutManager = LinearLayoutManager(context)
+            newRecyclerView = view.findViewById(R.id.recyclerViewStock)
+            newRecyclerView.visibility = View.VISIBLE
+            newRecyclerView.layoutManager = layoutManager
+            newRecyclerView.setHasFixedSize(true)
+            stockDataAdapter = StockDataAdapter(getItemList())
+            newRecyclerView.adapter = stockDataAdapter
+        }else{
+            newRecyclerView.visibility = View.GONE
+        }
 
-        //get arrayList value and show the value in recycleView
-        val layoutManager = LinearLayoutManager(context)
-        newRecyclerView = view.findViewById(R.id.recyclerViewStock)
-        newRecyclerView.layoutManager = layoutManager
-        newRecyclerView.setHasFixedSize(true)
-        stockDataAdapter = StockDataAdapter(arrayList)
-        newRecyclerView.adapter = stockDataAdapter
     }
 
-    private fun stockData(){
+    private fun getItemList(): ArrayList<StockData>{
+        val databaseHandler: DatabaseHandler = DatabaseHandler(requireContext())
 
-        stockId = arrayOf(1, 2)
-        stockName = arrayOf("Apel", "Jagung")
-        stockQuantity = arrayOf(1, 2)
+        val itemStokList : ArrayList<StockData> = databaseHandler.viewItemStock()
 
-        arrayList = arrayListOf<StockData>()
-
-        for(i in stockId.indices){
-            val stockData = StockData(stockId[i],stockName[i], stockQuantity[i])
-            arrayList.add(stockData)
-        }
+        return  itemStokList
     }
 }
