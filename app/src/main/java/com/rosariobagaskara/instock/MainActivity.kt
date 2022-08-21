@@ -1,8 +1,10 @@
 package com.rosariobagaskara.instock
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.rosariobagaskara.instock.databinding.ActivityMainBinding
@@ -33,5 +35,14 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout,fragment)
         fragmentTransaction.commit()
+    }
+
+    fun updateListStock(stockData: StockData){
+        val intent = Intent(this, AddStockActivity::class.java)
+        Log.e("tes", stockData.toString())
+        intent.putExtra("idItem",stockData.stockId)
+        intent.putExtra("namaItem",stockData.stockName)
+        intent.putExtra("quantityItem",stockData.stockQuantity)
+        startActivity(intent)
     }
 }

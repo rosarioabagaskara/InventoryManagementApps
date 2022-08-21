@@ -11,4 +11,5 @@
     <color name="appTheme">#5FA8D3</color>
     <color name="backgroundCardview">#CFD2D5</color>
     <color name="buttonDelete">#EF8585</color>
+    <color name="buttonEdit">#777878</color>
 </resources>

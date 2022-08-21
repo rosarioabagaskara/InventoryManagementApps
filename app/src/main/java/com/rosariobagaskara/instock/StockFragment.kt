@@ -81,7 +81,7 @@ class StockFragment : Fragment() {
             newRecyclerView.visibility = View.VISIBLE
             newRecyclerView.layoutManager = layoutManager
             newRecyclerView.setHasFixedSize(true)
-            stockDataAdapter = StockDataAdapter(getItemList())
+            stockDataAdapter = context?.let { StockDataAdapter(it, getItemList()) }!!
             newRecyclerView.adapter = stockDataAdapter
         }else{
             newRecyclerView.visibility = View.GONE

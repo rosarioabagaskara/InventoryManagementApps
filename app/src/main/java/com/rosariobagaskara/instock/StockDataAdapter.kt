@@ -1,13 +1,18 @@
 package com.rosariobagaskara.instock
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
+import kotlin.coroutines.coroutineContext
 
-class StockDataAdapter(private val stockList: ArrayList<StockData>): RecyclerView.Adapter<StockDataAdapter.MyViewHolder>() {
+class StockDataAdapter(private val c: Context, private val stockList: ArrayList<StockData>): RecyclerView.Adapter<StockDataAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_stock,parent,false)
@@ -15,10 +20,15 @@ class StockDataAdapter(private val stockList: ArrayList<StockData>): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = stockList[position]
+        val currentItem = stockList.get(position)
 
         holder.stockName.text = currentItem.stockName
         holder.stockQuantityValue.text = "${currentItem.stockQuantity} Pcs"
+        holder.listStockUpdate.setOnClickListener { view ->
+            if(c is MainActivity){
+                c.updateListStock(currentItem)
+            }
+        }
 
     }
 
@@ -26,8 +36,11 @@ class StockDataAdapter(private val stockList: ArrayList<StockData>): RecyclerVie
         return stockList.size
     }
 
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val stockName : TextView = itemView.findViewById(R.id.namaStockValueTextView)
-        val stockQuantityValue : TextView = itemView.findViewById(R.id.stockQuantityValueTextView)
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val stockName = itemView.findViewById<TextView>(R.id.namaStockValueTextView)
+        val stockQuantityValue = itemView.findViewById<TextView>(R.id.stockQuantityValueTextView)
+        val listStockUpdate = itemView.findViewById<ImageView>(R.id.listStockButtonEdit)
+
     }
+
 }

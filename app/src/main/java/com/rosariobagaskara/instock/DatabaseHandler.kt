@@ -21,7 +21,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-        val createStokTable = ("CREATE TABLE $TABLE_STOK ($stokId INTEGER_PRIMARY_KEY, $stokName TEXT, $stokQuantity INTEGER)")
+        val createStokTable = ("CREATE TABLE" + TABLE_STOK +"("+ stokId + "INTEGER_PRIMARY_KEY," + stokName +"TEXT," + stokQuantity + "INTEGER"+")")
         p0?.execSQL(createStokTable)
     }
 
