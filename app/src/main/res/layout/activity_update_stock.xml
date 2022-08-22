@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddStockActivity">
+    tools:context=".UpdateStockActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -45,15 +45,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
+        android:orientation="horizontal"
         android:layout_margin="20dp">
 
         <Button
-            android:id="@+id/submitStock"
-            android:layout_width="match_parent"
+            android:id="@+id/updateStocks"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@color/appTheme"
             android:textStyle="bold"
-            android:text="Submit" />
+            android:text="Update" />
+
+        <Button
+            android:id="@+id/cancelUpdateStocks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/backgroundCardview"
+            android:textStyle="bold"
+            android:text="Cancel" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

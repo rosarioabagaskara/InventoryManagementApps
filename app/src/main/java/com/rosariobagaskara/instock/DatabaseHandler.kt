@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
-        private val DATABASE_VERSION = 1
+        private val DATABASE_VERSION = 2
         private val DATABASE_NAME = "anindatu_database"
 
         private val TABLE_STOK = "StokTable"
@@ -21,7 +21,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
-        val createStokTable = ("CREATE TABLE" + TABLE_STOK +"("+ stokId + "INTEGER_PRIMARY_KEY," + stokName +"TEXT," + stokQuantity + "INTEGER"+")")
+        val createStokTable = ("CREATE TABLE $TABLE_STOK ( $stokId INTEGER PRIMARY KEY, $stokName TEXT, $stokQuantity INTEGER)")
         p0?.execSQL(createStokTable)
     }
 
@@ -40,6 +40,35 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         val success = db.insert(TABLE_STOK, null, contentValue)
 
+        db.close()
+        return success
+    }
+
+    fun updateItemStok(stockData: StockData): Int {
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+        contentValue.put(stokName, stockData.stockName)
+        contentValue.put(stokQuantity, stockData.stockQuantity)
+
+        // Updating Row
+        val success = db.update(TABLE_STOK, contentValue, stokId + "=" + stockData.stockId, null)
+        //2nd argument is String containing nullColumnHack
+
+        // Closing database connection
+        db.close()
+        return success
+    }
+
+    fun deleteItemStok(stockData: StockData): Int {
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+        contentValue.put(stokId, stockData.stockId)
+
+        // Updating Row
+        val success = db.delete(TABLE_STOK, stokId + "=" + stockData.stockId, null)
+        //2nd argument is String containing nullColumnHack
+
+        // Closing database connection
         db.close()
         return success
     }

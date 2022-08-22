@@ -6,6 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/listStockCardView"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -29,7 +31,7 @@
                     android:id="@+id/namaStockTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.2"
                     android:layout_marginLeft="8dp"
                     android:text="Nama Item: "
                     android:textSize="15dp"
@@ -44,15 +46,6 @@
                     android:text="Apel"
                     android:textSize="15dp"
                     android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/listStockButtonEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:gravity="end"
-                    app:tint="@color/buttonEdit"
-                    app:srcCompat="@drawable/ic_baseline_edit_24" />
 
                 <ImageView
                     android:id="@+id/listStockButtonDelete"

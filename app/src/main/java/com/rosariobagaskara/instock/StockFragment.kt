@@ -73,11 +73,10 @@ class StockFragment : Fragment() {
             val intent = Intent(activity, AddStockActivity::class.java)
             activity?.startActivity(intent)
         }
-
+        newRecyclerView = view.findViewById(R.id.recyclerViewStock)
         if(getItemList().size > 0 ){
             //get arrayList value and show the value in recycleView
             val layoutManager = LinearLayoutManager(context)
-            newRecyclerView = view.findViewById(R.id.recyclerViewStock)
             newRecyclerView.visibility = View.VISIBLE
             newRecyclerView.layoutManager = layoutManager
             newRecyclerView.setHasFixedSize(true)

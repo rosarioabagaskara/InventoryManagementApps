@@ -24,9 +24,15 @@ class StockDataAdapter(private val c: Context, private val stockList: ArrayList<
 
         holder.stockName.text = currentItem.stockName
         holder.stockQuantityValue.text = "${currentItem.stockQuantity} Pcs"
-        holder.listStockUpdate.setOnClickListener { view ->
+        holder.listStockCardView.setOnClickListener{view ->
             if(c is MainActivity){
                 c.updateListStock(currentItem)
+            }
+        }
+
+        holder.listStockButtonDelete.setOnClickListener{view ->
+            if(c is MainActivity){
+                c.deleteListStock(currentItem)
             }
         }
 
@@ -39,8 +45,7 @@ class StockDataAdapter(private val c: Context, private val stockList: ArrayList<
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val stockName = itemView.findViewById<TextView>(R.id.namaStockValueTextView)
         val stockQuantityValue = itemView.findViewById<TextView>(R.id.stockQuantityValueTextView)
-        val listStockUpdate = itemView.findViewById<ImageView>(R.id.listStockButtonEdit)
-
+        val listStockCardView = itemView.findViewById<CardView>(R.id.listStockCardView)
+        val listStockButtonDelete = itemView.findViewById<ImageView>(R.id.listStockButtonDelete)
     }
-
 }
