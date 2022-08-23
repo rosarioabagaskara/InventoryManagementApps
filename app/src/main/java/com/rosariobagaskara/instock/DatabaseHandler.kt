@@ -7,10 +7,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import org.json.JSONObject
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
-        private val DATABASE_VERSION = 2
+        private val DATABASE_VERSION = 3
         private val DATABASE_NAME = "anindatu_database"
 
         private val TABLE_STOK = "StokTable"
@@ -18,11 +19,22 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         private val stokName = "stok_name"
         private val stokQuantity = "stok_quantity"
 
+        private val TABLE_PRODUK = "ProdukTable"
+        private val produkId = "produk_id"
+        private val produkName = "produk_name"
+        private val jenisProduk = "produk_jenis"
+        private val galonLiter = "produk_liter_galon"
+        private val itemProduk = "produk_item"
+        private val hargaProduk = "produk_harga"
+
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
         val createStokTable = ("CREATE TABLE $TABLE_STOK ( $stokId INTEGER PRIMARY KEY, $stokName TEXT, $stokQuantity INTEGER)")
         p0?.execSQL(createStokTable)
+
+        val createProdukTable = ("CREATE TABLE $TABLE_PRODUK ( $produkId INTEGER PRIMARY KEY, $produkName TEXT, $jenisProduk TEXT, $galonLiter INTEGER, $itemProduk VARCHAR(255), $hargaProduk DOUBLE )")
+        p0?.execSQL(createProdukTable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -103,5 +115,21 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             }while (cursor.moveToNext())
         }
         return itemStockList
+    }
+
+    fun addProduk(produkData: ProdukData): Long{
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+
+        contentValue.put(produkName, produkData.namaProduk)
+        contentValue.put(jenisProduk, produkData.jenisProduk)
+        contentValue.put(galonLiter, produkData.galonLiterValue)
+        contentValue.put(itemProduk, JSONObject(produkData.itemProduk as Map<String, Map<String, String>>).toString())
+        contentValue.put(hargaProduk, produkData.harga)
+
+        val success = db.insert(TABLE_PRODUK, null, contentValue)
+
+        db.close()
+        return success
     }
 }

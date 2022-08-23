@@ -20,8 +20,11 @@ private lateinit var produkDataAdapter : ProdukDataAdapter
 private lateinit var newRecyclerView : RecyclerView
 private lateinit var arrayList: ArrayList<ProdukData>
 lateinit var produkId: Array<Int>
+lateinit var itemHarga: Array<Double>
 lateinit var produkName: Array<String>
-lateinit var itemProduk: Array<Array<String>>
+lateinit var jenisProduk: Array<String>
+lateinit var galonLiterValue: Array<Int>
+lateinit var itemProduk: HashMap<String,String>
 lateinit var addProduk: FloatingActionButton
 
 /**
@@ -90,15 +93,20 @@ class ProdukFragment : Fragment() {
     }
 
     fun produkData(){
-        produkId = arrayOf(1, 2)
-        produkName = arrayOf("Galon", "Laundry")
-        itemProduk = arrayOf(arrayOf("Tissue", "Tutup Botol"), arrayOf("Pewangi"))
-
+        produkId = arrayOf(1)
+        produkName = arrayOf("Galon")
+        itemProduk = HashMap<String, String>()
+        itemProduk["ID"] = "1"
+        itemProduk["NamaStok"] = "Tissue"
+        itemProduk["QuantityStok"] = "1"
+        itemHarga = arrayOf(5000.00)
+        jenisProduk = arrayOf("Laundry")
+        galonLiterValue = arrayOf(0)
         arrayList = arrayListOf<ProdukData>()
 
         for(i in produkId.indices){
-            val produkData = ProdukData(produkId[i], produkName[i], itemProduk[i])
-            arrayList.add(produkData)
+//            val produkData = ProdukData(produkId[i], produkName[i], jenisProduk[i],galonLiterValue[i], itemProduk, itemHarga[i])
+//            arrayList.add(produkData)
         }
     }
 }
