@@ -7,6 +7,10 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.view.iterator
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import org.json.JSONObject
 
 class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +63,6 @@ class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
         val buttonSubmit = findViewById<Button>(R.id.submitProduk)
 
         buttonSubmit.setOnClickListener {
-            Log.e("tes","tes12345")
             val namaProdukTextView = findViewById<EditText>(R.id.addProdukNameValue)
             val spinnerJenisProduk = findViewById<Spinner>(R.id.spinnerJenisProduk)
             val galonLiterTextView = findViewById<EditText>(R.id.editTextLiterPerGalon)
@@ -75,9 +78,6 @@ class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
                 val selectedObject = itemStokSpinner.selectedItem as StockData
                 produkHashMapItem = hashMapOf("ID" to selectedObject.stockId.toString(), "NamaStok" to selectedObject.stockName, "QuantityStok" to itemStokQuantityTextView.text.toString())
                 produkHashMap[i.toString()] = produkHashMapItem
-                Log.e("tes", selectedObject.stockId.toString())
-                Log.e("tes", selectedObject.stockName)
-                Log.e("tes", itemStokQuantityTextView.text.toString())
             }
             val namaProdukValue = namaProdukTextView.text.toString()
             val spinnerJenisProdukValue = spinnerJenisProduk.selectedItem.toString()
@@ -87,7 +87,8 @@ class AddProdukActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
             }
             var hargaProdukValue = mataUangEditText.text.toString()
             val databaseHandler : DatabaseHandler = DatabaseHandler(this)
-            if(!namaProdukValue.isEmpty() && !hargaProdukValue.isEmpty()){
+
+            if(!namaProdukValue.isEmpty() && layoutCount > 0 && !hargaProdukValue.isEmpty()){
                 val hargaProdukDubleValue = hargaProdukValue.toDouble()
                 val status = databaseHandler.addProduk(ProdukData(0, namaProdukValue,
                     spinnerJenisProdukValue, galonLiterValue, produkHashMap, hargaProdukDubleValue)

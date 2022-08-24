@@ -20,7 +20,7 @@ class StockDataAdapter(private val c: Context, private val stockList: ArrayList<
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = stockList.get(position)
+        val currentItem = stockList[position]
 
         holder.stockName.text = currentItem.stockName
         holder.stockQuantityValue.text = "${currentItem.stockQuantity} Pcs"

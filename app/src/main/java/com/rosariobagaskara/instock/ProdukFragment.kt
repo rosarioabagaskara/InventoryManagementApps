@@ -81,32 +81,25 @@ class ProdukFragment : Fragment() {
             val intent = Intent(activity, AddProdukActivity::class.java)
             startActivity(intent)
         }
-
-        produkData()
-
-        val layoutManager = LinearLayoutManager(context)
         newRecyclerView = view.findViewById(R.id.recyclerViewProduk)
-        newRecyclerView.layoutManager = layoutManager
-        newRecyclerView.setHasFixedSize(true)
-        produkDataAdapter = ProdukDataAdapter(arrayList)
-        newRecyclerView.adapter = produkDataAdapter
+
+        if(getProdukList().size > 0){
+            val layoutManager = LinearLayoutManager(context)
+            newRecyclerView.visibility = View.VISIBLE
+            newRecyclerView.layoutManager = layoutManager
+            newRecyclerView.setHasFixedSize(true)
+            produkDataAdapter = context?.let { ProdukDataAdapter(it,getProdukList()) }!!
+            newRecyclerView.adapter = produkDataAdapter
+        }else{
+            newRecyclerView.visibility = View.GONE
+        }
+
     }
 
-    fun produkData(){
-        produkId = arrayOf(1)
-        produkName = arrayOf("Galon")
-        itemProduk = HashMap<String, String>()
-        itemProduk["ID"] = "1"
-        itemProduk["NamaStok"] = "Tissue"
-        itemProduk["QuantityStok"] = "1"
-        itemHarga = arrayOf(5000.00)
-        jenisProduk = arrayOf("Laundry")
-        galonLiterValue = arrayOf(0)
-        arrayList = arrayListOf<ProdukData>()
 
-        for(i in produkId.indices){
-//            val produkData = ProdukData(produkId[i], produkName[i], jenisProduk[i],galonLiterValue[i], itemProduk, itemHarga[i])
-//            arrayList.add(produkData)
-        }
+    private fun getProdukList(): ArrayList<ProdukData>{
+        val databaseHandler: DatabaseHandler = DatabaseHandler(requireContext())
+        val produkList : ArrayList<ProdukData> = databaseHandler.viewProduk()
+        return  produkList
     }
 }
