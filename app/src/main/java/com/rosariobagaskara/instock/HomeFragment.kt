@@ -17,14 +17,6 @@ private const val ARG_PARAM2 = "param2"
 
 private lateinit var orderAdapter : OrderDataAdapter
 private lateinit var newRecyclerView : RecyclerView
-private lateinit var arrayList: ArrayList<OrderData>
-lateinit var orderId: Array<Int>
-lateinit var orderNumber: Array<String>
-lateinit var orderDate: Array<String>
-lateinit var namaPemesan: Array<String>
-lateinit var statusOrder: Array<String>
-lateinit var item: Array<String>
-lateinit var itemNumber: Array<Int>
 lateinit var addOrderButton: FloatingActionButton
 
 /**
@@ -81,34 +73,25 @@ class HomeFragment : Fragment() {
             val intent = Intent(activity, AddOrderActivity::class.java)
             startActivity(intent)
         }
-        //Add item data value to arrayList
-        orderData()
-
-        //get arrayList value and show the value in recycleView
-        val layoutManager = LinearLayoutManager(context)
         newRecyclerView = view.findViewById(R.id.recyclerView)
-        newRecyclerView.layoutManager = layoutManager
-        newRecyclerView.setHasFixedSize(true)
-        orderAdapter = OrderDataAdapter(arrayList)
-        newRecyclerView.adapter = orderAdapter
+
+        if(getOrderList().size > 0){
+            //get arrayList value and show the value in recycleView
+            val layoutManager = LinearLayoutManager(context)
+            newRecyclerView.visibility = View.VISIBLE
+            newRecyclerView.layoutManager = layoutManager
+            newRecyclerView.setHasFixedSize(true)
+            orderAdapter = context?.let { OrderDataAdapter(it, getOrderList()) }!!
+            newRecyclerView.adapter = orderAdapter
+        }else{
+            newRecyclerView.visibility = View.GONE
+        }
+
     }
 
-    private fun orderData(){
-
-        orderId = arrayOf(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
-        orderNumber = arrayOf("Order #1","Order #2","Order #3","Order #4","Order #5","Order #6","Order #7","Order #8", "Order #9","Order #10","Order #11","Order #12","Order #13","Order #14","Order #15","Order #16")
-        orderDate = arrayOf("02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022","02/06/2022","02/07/2022","02/08/2022","02/05/2022")
-        namaPemesan = arrayOf("Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha","Bagas","Tegar","Abram","Gretha")
-        statusOrder = arrayOf("Success","Success","Success","Success","Success","Success","Success","Success", "Success","Success","Success","Success","Success","Success","Success","Canceled")
-        item = arrayOf("Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon","Galon", "Laundry Biasa","Galon","Galon")
-        itemNumber = arrayOf(1,1,2,4,1,1,2,4,1,1,2,4,1,1,2,4)
-
-
-        arrayList = arrayListOf<OrderData>()
-
-        for(i in orderId.indices){
-            val orderData = OrderData(orderId[i], orderNumber[i], orderDate[i], namaPemesan[i], statusOrder[i], item[i], itemNumber[i])
-            arrayList.add(orderData)
-        }
+    private fun getOrderList(): ArrayList<OrderData>{
+        val databaseHandler: DatabaseHandler = DatabaseHandler(requireContext())
+        val orderList : ArrayList<OrderData> = databaseHandler.viewOrder()
+        return  orderList
     }
 }

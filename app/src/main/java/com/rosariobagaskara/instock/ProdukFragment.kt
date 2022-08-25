@@ -18,13 +18,6 @@ private const val ARG_PARAM2 = "param2"
 
 private lateinit var produkDataAdapter : ProdukDataAdapter
 private lateinit var newRecyclerView : RecyclerView
-private lateinit var arrayList: ArrayList<ProdukData>
-lateinit var produkId: Array<Int>
-lateinit var itemHarga: Array<Double>
-lateinit var produkName: Array<String>
-lateinit var jenisProduk: Array<String>
-lateinit var galonLiterValue: Array<Int>
-lateinit var itemProduk: HashMap<String,String>
 lateinit var addProduk: FloatingActionButton
 
 /**

@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("produkName", produkData.namaProduk)
         intent.putExtra("jenisProduk", produkData.jenisProduk)
         intent.putExtra("galonLiterValue", produkData.galonLiterValue)
-//        intent.putExtra("itemProduk", JSONObject(produkData.itemProduk as Map<String, Map<String, String>>).toString())
+        intent.putExtra("itemProduk", JSONObject(produkData.itemProduk as Map<String, Map<String, String>>).toString())
         intent.putExtra("harga", produkData.harga)
         startActivity(intent)
     }
@@ -110,6 +110,34 @@ class MainActivity : AppCompatActivity() {
 
             if(status > -1){
                 Toast.makeText(this, "Produk berhasil dihapus!", Toast.LENGTH_SHORT).show()
+            }
+            dialogInterface.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialogInterface, which ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog : AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+    }
+
+    fun cancelOrder(orderData: OrderData){
+        var builder = AlertDialog.Builder(this)
+
+        builder.setTitle("Cancel Order")
+        builder.setMessage("Yakin ingin cancel order #${orderData.orderId}?")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+        builder.setPositiveButton("Yes") { dialogInterface, which ->
+
+            val databaseHandler : DatabaseHandler = DatabaseHandler(this)
+
+            val status = databaseHandler.cancelOrder(OrderData(orderData.orderId, "", "", "Canceled", hashMapOf()))
+
+            if(status > -1){
+                Toast.makeText(this, "Order berhasil dicancel!", Toast.LENGTH_SHORT).show()
             }
             dialogInterface.dismiss()
         }

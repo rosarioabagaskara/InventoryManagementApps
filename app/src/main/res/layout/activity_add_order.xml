@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".AddOrderActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
         <LinearLayout
             android:id="@+id/layoutListAddOrderProduk"
             android:layout_width="match_parent"
@@ -34,6 +24,14 @@
                 android:inputType="textPersonName"
                 android:minHeight="48dp" />
 
+            <LinearLayout
+                android:id="@+id/layoutListProdukOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
             <Button
                 android:id="@+id/tambahProduk"
                 android:layout_width="wrap_content"
@@ -42,7 +40,6 @@
                 android:text="Tambah Produk" />
 
         </LinearLayout>
-    </ScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -58,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/appTheme"
-            android:textStyle="bold"
-            android:text="Submit" />
+            android:text="Submit"
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

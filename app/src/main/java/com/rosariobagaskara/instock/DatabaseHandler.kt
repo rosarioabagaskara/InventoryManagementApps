@@ -13,10 +13,13 @@ import com.google.gson.Gson
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
-        private val DATABASE_VERSION = 3
+        private val DATABASE_VERSION = 5
         private val DATABASE_NAME = "anindatu_database"
 
         private val TABLE_STOK = "StokTable"
@@ -32,6 +35,13 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         private val itemProduk = "produk_item"
         private val hargaProduk = "produk_harga"
 
+        private val TABLE_ORDER = "OrderTable"
+        private val orderId = "order_id"
+        private val orderDate = "order_date"
+        private val namaPemesan = "order_nama_pemesan"
+        private val orderStatus = "order_status"
+        private val orderProduk = "order_produk"
+
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
@@ -40,10 +50,15 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         val createProdukTable = ("CREATE TABLE $TABLE_PRODUK ( $produkId INTEGER PRIMARY KEY, $produkName TEXT, $jenisProduk TEXT, $galonLiter INTEGER, $itemProduk VARCHAR(255), $hargaProduk DOUBLE )")
         p0?.execSQL(createProdukTable)
+
+        val createOrderTable = ("CREATE TABLE $TABLE_ORDER ( $orderId INTEGER PRIMARY KEY, $orderDate DATETIME, $namaPemesan TEXT, $orderStatus TEXT, $orderProduk VARCHAR(255))")
+        p0?.execSQL(createOrderTable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         p0?.execSQL("DROP TABLE IF EXISTS $TABLE_STOK")
+        p0?.execSQL("DROP TABLE IF EXISTS $TABLE_PRODUK")
+        p0?.execSQL("DROP TABLE IF EXISTS $TABLE_ORDER")
         onCreate(p0)
     }
 
@@ -69,6 +84,20 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         // Updating Row
         val success = db.update(TABLE_STOK, contentValue, stokId + "=" + stockData.stockId, null)
+        //2nd argument is String containing nullColumnHack
+
+        // Closing database connection
+        db.close()
+        return success
+    }
+
+    fun updateItemStokQuantityById(stockIdValue: Int, stockQuantityValue: Int): Int {
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+        contentValue.put(stokQuantity, stockQuantityValue)
+
+        // Updating Row
+        val success = db.update(TABLE_STOK, contentValue, stokId + "=" + stockIdValue, null)
         //2nd argument is String containing nullColumnHack
 
         // Closing database connection
@@ -205,5 +234,122 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         return success
 
+    }
+
+    fun addOrder(orderData: OrderData): Long{
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+
+        contentValue.put(orderDate, orderData.dateOrder)
+        contentValue.put(namaPemesan, orderData.namaPemesan)
+        contentValue.put(orderStatus, orderData.statusOrder)
+        contentValue.put(orderProduk, JSONObject(orderData.orderProduk as Map<String, Map<String, String>>).toString())
+
+        val success = db.insert(TABLE_ORDER, null, contentValue)
+
+        db.close()
+        return success
+    }
+
+    @SuppressLint("Range")
+    fun viewOrder(): ArrayList<OrderData>{
+        val orderList : ArrayList<OrderData> = ArrayList<OrderData>()
+
+        val selectQuery = "SELECT * FROM $TABLE_ORDER"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+
+        var orderIdList : Int
+        var dateOrderList : String
+        var namaPemesanList : String
+        var statusOrderList : String
+        var orderProdukList : String
+
+        if(cursor.moveToFirst()){
+            do{
+
+                orderIdList = cursor.getInt(cursor.getColumnIndex(orderId))
+                dateOrderList = cursor.getString(cursor.getColumnIndex(orderDate))
+                namaPemesanList = cursor.getString(cursor.getColumnIndex(namaPemesan))
+                statusOrderList = cursor.getString(cursor.getColumnIndex(orderStatus))
+                orderProdukList = cursor.getString(cursor.getColumnIndex(orderProduk))
+
+                val hashMapOrderList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(orderProdukList)
+                val od = OrderData(orderId = orderIdList, dateOrder = dateOrderList, namaPemesan = namaPemesanList, statusOrder = statusOrderList, orderProduk = hashMapOrderList)
+                orderList.add(od)
+            }while (cursor.moveToNext())
+        }
+        return orderList
+    }
+
+    fun cancelOrder(orderData: OrderData): Int {
+        val db = this.writableDatabase
+        val contentValue = ContentValues()
+        contentValue.put(orderStatus, orderData.statusOrder)
+
+        // Updating Row
+        val success = db.update(TABLE_ORDER, contentValue, orderId + "=" + orderData.orderId, null)
+        //2nd argument is String containing nullColumnHack
+
+        // Closing database connection
+        db.close()
+        return success
+    }
+
+    @SuppressLint("Range")
+    fun getStockById(stokIdValue: Int): HashMap<String,String> {
+        var stokHashMap : HashMap<String,String> = HashMap<String,String>()
+
+        val selectQuery = "SELECT * FROM $TABLE_STOK WHERE $stokId = $stokIdValue"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return HashMap<String,String>()
+        }
+        var id: Int
+        var name: String
+        var quantity: Int
+        if(cursor.moveToFirst()){
+            id = cursor.getInt(cursor.getColumnIndex(stokId))
+            name = cursor.getString(cursor.getColumnIndex(stokName))
+            quantity = cursor.getInt(cursor.getColumnIndex(stokQuantity))
+            stokHashMap = hashMapOf("ID" to id.toString(), "NamaStok" to name, "QuantityStok" to quantity.toString())
+        }
+        return stokHashMap
+    }
+
+    @SuppressLint("Range")
+    fun viewItemProdukByProdukId(produkIdValue : Int): HashMap<String, HashMap<String, String>>{
+
+        val selectQuery = "SELECT $itemProduk FROM $TABLE_PRODUK WHERE $produkId = $produkIdValue"
+        val db = this.readableDatabase
+        var hashMapProdukList : HashMap<String, HashMap<String, String>> = HashMap<String, HashMap<String, String>>()
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return hashMapOf()
+        }
+
+        var itemProdukList : String
+
+        if(cursor.moveToNext()){
+            itemProdukList = cursor.getString(cursor.getColumnIndex(itemProduk))
+            hashMapProdukList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(itemProdukList)
+        }
+        return hashMapProdukList
     }
 }
