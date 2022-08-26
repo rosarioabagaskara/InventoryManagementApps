@@ -1,16 +1,15 @@
 package com.rosariobagaskara.instock
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
-import kotlin.coroutines.coroutineContext
 
 class StockDataAdapter(private val c: Context, private val stockList: ArrayList<StockData>): RecyclerView.Adapter<StockDataAdapter.MyViewHolder>() {
 
@@ -34,6 +33,11 @@ class StockDataAdapter(private val c: Context, private val stockList: ArrayList<
             if(c is MainActivity){
                 c.deleteListStock(currentItem)
             }
+        }
+        if(position %2 == 0) {
+            holder.listStockCardView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }else {
+            holder.listStockCardView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
         }
 
     }

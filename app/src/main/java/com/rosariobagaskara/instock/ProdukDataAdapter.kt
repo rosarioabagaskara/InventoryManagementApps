@@ -1,7 +1,7 @@
 package com.rosariobagaskara.instock
 
 import android.content.Context
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +42,12 @@ class ProdukDataAdapter(private val c: Context, private val produkList: ArrayLis
                 c.deleteProduk(currentItem)
             }
         }
+        if(position %2 == 0) {
+            holder.listProdukCardView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }else {
+            holder.listProdukCardView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
+        }
+
         holder.produkName.text = currentItem.namaProduk
         holder.produkItemList.text = itemListTemp
     }

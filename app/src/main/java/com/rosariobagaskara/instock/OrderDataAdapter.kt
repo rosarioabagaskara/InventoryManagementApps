@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -48,15 +49,19 @@ class OrderDataAdapter(private val c : Context, private val orderList : ArrayLis
             val index = orderHashMap[i.toString()]
             if (index != null) {
                 produkTemp += "${index.get("NamaProduk").toString()}\n"
-                produkQuantityTemp += "${index.get("QuantityStok").toString()}\n"
+                produkQuantityTemp += "${index.get("QuantityProduk").toString()}\n"
             }
+        }
+        if(position %2 == 0) {
+            holder.listOrderCardView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }else {
+            holder.listOrderCardView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
         }
         holder.produkTextView.text = produkTemp
         holder.produkQuantityTextView.text = produkQuantityTemp
     }
 
     override fun getItemCount(): Int {
-
         return orderList.size
     }
 
@@ -68,5 +73,6 @@ class OrderDataAdapter(private val c : Context, private val orderList : ArrayLis
         val produkTextView: TextView = itemView.findViewById(R.id.itemTextView)
         val produkQuantityTextView: TextView = itemView.findViewById(R.id.itemNumberTextView)
         val cancelOrder: ImageView = itemView.findViewById(R.id.listOrderCancel)
+        val listOrderCardView: CardView = itemView.findViewById(R.id.listOrderCardView)
     }
 }

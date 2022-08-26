@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import java.util.*
-import kotlin.collections.ArrayList
 
 class AddStockActivity : AppCompatActivity() {
 

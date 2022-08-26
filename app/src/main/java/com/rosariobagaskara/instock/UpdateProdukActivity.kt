@@ -2,12 +2,10 @@ package com.rosariobagaskara.instock
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
 
 class UpdateProdukActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

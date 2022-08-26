@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import androidx.core.content.contentValuesOf
-import com.google.gson.Gson
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
@@ -289,6 +287,45 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         return orderList
     }
 
+    @SuppressLint("Range")
+    fun getOrderByDate(date: String): ArrayList<OrderData>{
+        val orderList : ArrayList<OrderData> = ArrayList<OrderData>()
+
+        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderDate = '$date'"
+        Log.e("tes", selectQuery)
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+
+        var orderIdList : Int
+        var dateOrderList : String
+        var namaPemesanList : String
+        var statusOrderList : String
+        var orderProdukList : String
+
+        if(cursor.moveToFirst()){
+            do{
+
+                orderIdList = cursor.getInt(cursor.getColumnIndex(orderId))
+                dateOrderList = cursor.getString(cursor.getColumnIndex(orderDate))
+                namaPemesanList = cursor.getString(cursor.getColumnIndex(namaPemesan))
+                statusOrderList = cursor.getString(cursor.getColumnIndex(orderStatus))
+                orderProdukList = cursor.getString(cursor.getColumnIndex(orderProduk))
+
+                val hashMapOrderList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(orderProdukList)
+                val od = OrderData(orderId = orderIdList, dateOrder = dateOrderList, namaPemesan = namaPemesanList, statusOrder = statusOrderList, orderProduk = hashMapOrderList)
+                orderList.add(od)
+            }while (cursor.moveToNext())
+        }
+        return orderList
+    }
+
     fun cancelOrder(orderData: OrderData): Int {
         val db = this.writableDatabase
         val contentValue = ContentValues()
@@ -351,5 +388,27 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             hashMapProdukList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(itemProdukList)
         }
         return hashMapProdukList
+    }
+
+    @SuppressLint("Range")
+    fun getHargaProdukByProdukId(produkIdValue : Int): Double{
+
+        val selectQuery = "SELECT $hargaProduk FROM $TABLE_PRODUK WHERE $produkId = $produkIdValue"
+        val db = this.readableDatabase
+        var hargaProdukValue : Double = 0.0
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return 0.0
+        }
+
+
+        if(cursor.moveToNext()){
+            hargaProdukValue = cursor.getDouble(cursor.getColumnIndex(hargaProduk))
+        }
+        return hargaProdukValue
     }
 }

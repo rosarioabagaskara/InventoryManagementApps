@@ -3,32 +3,20 @@ package com.rosariobagaskara.instock
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class AddOrderActivity : AppCompatActivity()
-//    , AdapterView.OnItemSelectedListener
 {
-    val listJenisProduk = arrayOf("","Galon", "Laundry Kilat (1 sabun, 1 pewangi)", "Laundry Biasa (1 sabun, 1 pewangi)")
-    val listItemProdukGalon = HashMap<String, Array<String>>()
-    val listItemQuantityProdukGalon = HashMap<String, Array<Int>>()
-    val listItemProduk = arrayOf(arrayOf(""),arrayOf("Tutup Botol", "Tissue"), arrayOf("Sabun", "Pewangi"), arrayOf("Sabun", "Pewangi"))
-    val listItemValue = arrayOf(arrayOf(0),arrayOf(1, 1), arrayOf(1, 1), arrayOf(1, 1))
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_order)
         val addOrderProduk = findViewById<Button>(R.id.tambahProduk)
         val layoutListAddProduk = findViewById<LinearLayout>(R.id.layoutListProdukOrder)
-
-//        for(i in listJenisProduk.indices){
-//            listItemProdukGalon.put(listJenisProduk[i], listItemProduk[i])
-//            listItemQuantityProdukGalon.put(listJenisProduk[i], listItemValue[i])
-//        }
-
 
         addOrderProduk.setOnClickListener {
             val databaseHandler: DatabaseHandler = DatabaseHandler(this)
@@ -43,8 +31,6 @@ class AddOrderActivity : AppCompatActivity()
             var minteger = 1
             quantityOrder.setText("" + minteger)
             spinnerJenisProduk.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, produkList)
-//            spinnerJenisProduk.onItemSelectedListener = this
-
             deleteImageView.setOnClickListener{
                 layoutListAddProduk.removeView(listAddProduk)
             }
@@ -85,7 +71,13 @@ class AddOrderActivity : AppCompatActivity()
                 val quantityProduk = child.findViewById<EditText>(R.id.quantityOrder)
 
                 val selectedObject = produkSpinner.selectedItem as ProdukData
-                orderHashMapProduk = hashMapOf("ID" to selectedObject.produkId.toString(), "NamaProduk" to selectedObject.namaProduk, "QuantityStok" to quantityProduk.text.toString())
+                val hargaProduk = databaseHandler.getHargaProdukByProdukId(selectedObject.produkId)
+                val totalHarga = hargaProduk * Integer.parseInt(quantityProduk.text.toString())
+                orderHashMapProduk = hashMapOf(
+                    "ID" to selectedObject.produkId.toString(),
+                    "NamaProduk" to selectedObject.namaProduk,
+                    "QuantityProduk" to quantityProduk.text.toString(),
+                    "HargaProduk" to totalHarga.toString())
                 orderHashMap[i.toString()] = orderHashMapProduk
 
                 val itemProduk = databaseHandler.viewItemProdukByProdukId(selectedObject.produkId)
@@ -95,17 +87,19 @@ class AddOrderActivity : AppCompatActivity()
                     val index = stockProdukHashMap[i.toString()]
                     if (index != null) {
                         stokProdukHashMapDb = databaseHandler.getStockById(Integer.parseInt(index.get("ID")))
-                        if(Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) - Integer.parseInt(index["QuantityStok"]) < 0){
+                        if(Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) - (Integer.parseInt(index["QuantityStok"]) * Integer.parseInt(quantityProduk.text.toString())) < 0){
                             statusStokHabis = 1
                             itemStokHabis += "${stokProdukHashMapDb["NamaStok"].toString()}, "
                         }
                     }
                 }
+
             }
 
             val namaPelangganValue : String = namaPelanggan.text.toString()
             val statusOrder = "Success"
             val currentDate = LocalDateTime.now()
+            val currentDateString = currentDate.format(DateTimeFormatter.ISO_DATE)
             var stokUpdate :Int = 0
 
             if(!namaPelangganValue.isEmpty() && layoutCount > 0){
@@ -113,7 +107,7 @@ class AddOrderActivity : AppCompatActivity()
                     Toast.makeText(applicationContext, "Item $itemStokHabis kehabisan stok!", Toast.LENGTH_LONG).show()
                 }else{
                     val status = databaseHandler.addOrder(
-                        OrderData(0, currentDate.toString(),
+                        OrderData(0, currentDateString,
                             namaPelangganValue, statusOrder, orderHashMap)
                     )
                     if(status > -1){
@@ -132,7 +126,7 @@ class AddOrderActivity : AppCompatActivity()
                                     val indexStock = stockProdukHashMap[i.toString()]
                                     if(indexStock != null){
                                         stokProdukHashMapDb = databaseHandler.getStockById(Integer.parseInt(indexStock.get("ID")))
-                                        stokUpdate = Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) - Integer.parseInt(indexStock["QuantityStok"])
+                                        stokUpdate = Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) - (Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"]))
                                         statusUpdateStok = databaseHandler.updateItemStokQuantityById(Integer.parseInt(stokProdukHashMapDb["ID"]), stokUpdate)
                                     }
                                 }

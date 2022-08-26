@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.btnHome -> replaceFragment(HomeFragment())
                 R.id.btnProduk -> replaceFragment(ProdukFragment())
                 R.id.btnStock -> replaceFragment(StockFragment())
+                R.id.btnLaporan -> replaceFragment(ReportFragment())
                 else -> {
                 }
             }
