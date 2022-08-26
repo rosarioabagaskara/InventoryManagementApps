@@ -18,7 +18,6 @@ import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -33,7 +32,6 @@ lateinit var hargaTotal: TextView
  * create an instance of this fragment.
  */
 class ReportFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -62,7 +60,6 @@ class ReportFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment Report.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ReportFragment().apply {
