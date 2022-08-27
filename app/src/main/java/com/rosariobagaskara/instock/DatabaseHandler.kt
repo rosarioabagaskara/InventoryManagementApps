@@ -17,7 +17,7 @@ import kotlin.collections.HashMap
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
-        private val DATABASE_VERSION = 5
+        private val DATABASE_VERSION = 9
         private val DATABASE_NAME = "anindatu_database"
 
         private val TABLE_STOK = "StokTable"
@@ -40,6 +40,13 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         private val orderStatus = "order_status"
         private val orderProduk = "order_produk"
 
+        private val TABLE_LOG_STOK = "LogStokTable"
+        private val logStokId = "log_stok_id"
+        private val logStokDate = "log_stok_date"
+        private val logStokOrderDate = "log_stok_order_date"
+        private val logStokName = "log_stok_name"
+        private val logStokQuantity = "log_stok_quantity"
+        private val logStokStatus = "log_stok_status"
     }
 
     override fun onCreate(p0: SQLiteDatabase?) {
@@ -51,12 +58,16 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
         val createOrderTable = ("CREATE TABLE $TABLE_ORDER ( $orderId INTEGER PRIMARY KEY, $orderDate DATETIME, $namaPemesan TEXT, $orderStatus TEXT, $orderProduk VARCHAR(255))")
         p0?.execSQL(createOrderTable)
+
+        val createLogStokTable = ("CREATE TABLE $TABLE_LOG_STOK ( $logStokId INTEGER PRIMARY KEY, $logStokDate DATETIME, $logStokOrderDate DATETIME, $logStokName TEXT, $logStokQuantity INTEGER, $logStokStatus TEXT)")
+        p0?.execSQL(createLogStokTable)
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         p0?.execSQL("DROP TABLE IF EXISTS $TABLE_STOK")
         p0?.execSQL("DROP TABLE IF EXISTS $TABLE_PRODUK")
         p0?.execSQL("DROP TABLE IF EXISTS $TABLE_ORDER")
+        p0?.execSQL("DROP TABLE IF EXISTS $TABLE_LOG_STOK")
         onCreate(p0)
     }
 
@@ -288,10 +299,10 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     @SuppressLint("Range")
-    fun getOrderByDate(date: String): ArrayList<OrderData>{
+    fun getOrderByStatusAndDate(status:String, date: String): ArrayList<OrderData>{
         val orderList : ArrayList<OrderData> = ArrayList<OrderData>()
 
-        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderDate = '$date'"
+        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderStatus = '$status' AND $orderDate = '$date'"
         Log.e("tes", selectQuery)
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -321,6 +332,43 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
                 val hashMapOrderList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(orderProdukList)
                 val od = OrderData(orderId = orderIdList, dateOrder = dateOrderList, namaPemesan = namaPemesanList, statusOrder = statusOrderList, orderProduk = hashMapOrderList)
                 orderList.add(od)
+            }while (cursor.moveToNext())
+        }
+        return orderList
+    }
+
+    @SuppressLint("Range")
+    fun getOrderById(orderIdValue: Int): OrderData{
+        var orderList : OrderData = OrderData(0, "", "", "", hashMapOf())
+
+        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderId = $orderIdValue"
+
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return orderList
+        }
+
+        var orderIdList : Int
+        var dateOrderList : String
+        var namaPemesanList : String
+        var statusOrderList : String
+        var orderProdukList : String
+
+        if(cursor.moveToFirst()){
+            do{
+                orderIdList = cursor.getInt(cursor.getColumnIndex(orderId))
+                dateOrderList = cursor.getString(cursor.getColumnIndex(orderDate))
+                namaPemesanList = cursor.getString(cursor.getColumnIndex(namaPemesan))
+                statusOrderList = cursor.getString(cursor.getColumnIndex(orderStatus))
+                orderProdukList = cursor.getString(cursor.getColumnIndex(orderProduk))
+
+                val hashMapOrderList = Json.decodeFromString<HashMap<String, HashMap<String, String>>>(orderProdukList)
+                orderList = OrderData(orderId = orderIdList, dateOrder = dateOrderList, namaPemesan = namaPemesanList, statusOrder = statusOrderList, orderProduk = hashMapOrderList)
             }while (cursor.moveToNext())
         }
         return orderList
@@ -410,5 +458,52 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             hargaProdukValue = cursor.getDouble(cursor.getColumnIndex(hargaProduk))
         }
         return hargaProdukValue
+    }
+
+    fun addLogStok(logStokData: LogStokData): Long{
+        val db = this.writableDatabase
+
+        val contentValue = ContentValues()
+
+        contentValue.put(logStokDate, logStokData.logStokDate)
+        contentValue.put(logStokOrderDate, logStokData.logStokOrderDate)
+        contentValue.put(logStokName, logStokData.logStokName)
+        contentValue.put(logStokQuantity, logStokData.logStokQuantity)
+        contentValue.put(logStokStatus, logStokData.logStokStatus)
+
+        val success = db.insert(TABLE_LOG_STOK, null, contentValue)
+
+        db.close()
+        return success
+    }
+
+    @SuppressLint("Range")
+    fun getLogStockNameAndSumByOrderDate(date: String): ArrayList<LogStokData> {
+        var logStokList : ArrayList<LogStokData> = ArrayList<LogStokData>()
+        val selectQuery = "SELECT $logStokName, SUM($logStokQuantity) AS $logStokQuantity FROM $TABLE_LOG_STOK WHERE $logStokOrderDate = '$date' GROUP BY $logStokName"
+
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try{
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e : SQLiteException){
+            db.execSQL(selectQuery)
+            return ArrayList<LogStokData>()
+        }
+        var name: String
+        var quantity: Int
+        if(cursor.moveToFirst()){
+            do{
+                name = cursor.getString(cursor.getColumnIndex(logStokName))
+                quantity = cursor.getInt(cursor.getColumnIndex(logStokQuantity))
+                Log.e("ld", name)
+                val ld = LogStokData(0,"","", name, quantity, "")
+                Log.e("LD", ld.toString())
+                logStokList.add(ld)
+            }while(cursor.moveToNext())
+
+        }
+        return logStokList
     }
 }

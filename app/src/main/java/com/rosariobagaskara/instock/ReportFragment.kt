@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
@@ -22,9 +21,14 @@ import java.time.format.DateTimeFormatter
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-private lateinit var pendapatanAdapter: PendapatanAdapter
-private lateinit var newRecyclerView : RecyclerView
+private lateinit var pendapatanGalonAdapter: PendapatanGalonAdapter
+private lateinit var pendapatanLaundryAdapter: PendapatanLaundryAdapter
+private lateinit var logPenjualanStokAdapter: LogPenjualanStokAdapter
+private lateinit var newGalonRecyclerView : RecyclerView
+private lateinit var newLaundryRecyclerView : RecyclerView
+private lateinit var newLogStokRecyclerView : RecyclerView
 lateinit var hargaTotal: TextView
+lateinit var totalLiter: TextView
 
 /**
  * A simple [Fragment] subclass.
@@ -73,44 +77,72 @@ class ReportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        newRecyclerView = view.findViewById(R.id.pendapatanRecyclerView)
+        newGalonRecyclerView = view.findViewById(R.id.pendapatanGalonRecyclerView)
+        newLaundryRecyclerView = view.findViewById(R.id.pendapatanLaundryRecyclerView)
+        newLogStokRecyclerView = view.findViewById(R.id.penjualanStokRecyclerView)
         val currentDate = LocalDateTime.now()
-        Log.e("tes", currentDate.toString())
         val currentDateString = currentDate.format(DateTimeFormatter.ISO_DATE)
-        val orderList = getOrderListByDate(currentDateString)
+        val orderList = getOrderListBySuccessStatusAndDate(currentDateString)
+        val logStokList = getLogPenjualanStok(currentDateString)
         var hargaTemp = 0.0
+        var literTemp = 0
         hargaTotal = view.findViewById(R.id.hargaTotalTextView)
+        totalLiter = view.findViewById(R.id.totalLiterGalonTextView)
         if(orderList.size > 0){
             val layoutManager = LinearLayoutManager(context)
+            val layoutManagerLaundry = LinearLayoutManager(context)
             for(value in orderList){
                 val JsonProdukHashMap = JSONObject(value.orderProduk as Map<String, Map<String, String>>)
                 val orderHashMap = Json.decodeFromString<Map<String, Map<String, String>>>(JsonProdukHashMap.toString())
                 for (i in 0 until orderHashMap.size){
                     val index = orderHashMap[i.toString()]
                     if (index != null) {
-                        val formatter: NumberFormat = DecimalFormat("#,###")
-                        val myNumber = index["HargaProduk"]?.toDouble()
-                        val formattedNumber = formatter.format(myNumber)
-                        hargaTemp += myNumber!!
+                        hargaTemp += index["HargaProduk"]?.toDouble()!!
+                        literTemp += index["Liter"]?.toInt()!!
                     }
                 }
             }
             val formatter: NumberFormat = DecimalFormat("#,###")
             val formattedNumber = formatter.format(hargaTemp)
             hargaTotal.text = "Rp. $formattedNumber"
-            newRecyclerView.visibility = View.VISIBLE
-            newRecyclerView.layoutManager = layoutManager
-            newRecyclerView.setHasFixedSize(true)
-            pendapatanAdapter = PendapatanAdapter(orderList)
-            newRecyclerView.adapter = pendapatanAdapter
+            totalLiter.text = "Total Liter Galon: $literTemp Liter"
+            newGalonRecyclerView.visibility = View.VISIBLE
+            newGalonRecyclerView.layoutManager = layoutManager
+            newGalonRecyclerView.setHasFixedSize(true)
+            pendapatanGalonAdapter = PendapatanGalonAdapter(orderList)
+            newGalonRecyclerView.adapter = pendapatanGalonAdapter
+
+            newLaundryRecyclerView.visibility = View.VISIBLE
+            newLaundryRecyclerView.layoutManager = layoutManagerLaundry
+            newLaundryRecyclerView.setHasFixedSize(true)
+            pendapatanLaundryAdapter = PendapatanLaundryAdapter(orderList)
+            newLaundryRecyclerView.adapter = pendapatanLaundryAdapter
         }else{
-            newRecyclerView.visibility = View.GONE
+            newGalonRecyclerView.visibility = View.GONE
+            newLaundryRecyclerView.visibility = View.GONE
+        }
+        Log.e("tes", logStokList.toString())
+        if(getLogPenjualanStok(currentDateString).size > 0){
+            val layoutManagerLog = LinearLayoutManager(context)
+            newLogStokRecyclerView.visibility = View.VISIBLE
+            newLogStokRecyclerView.layoutManager = layoutManagerLog
+            newLogStokRecyclerView.setHasFixedSize(true)
+            logPenjualanStokAdapter = LogPenjualanStokAdapter(getLogPenjualanStok(currentDateString))
+            newLogStokRecyclerView.adapter = logPenjualanStokAdapter
+        }else{
+            newLogStokRecyclerView.visibility = View.GONE
         }
     }
 
-    private fun getOrderListByDate(date : String) : ArrayList<OrderData>{
+    private fun getOrderListBySuccessStatusAndDate(date : String) : ArrayList<OrderData>{
         val databaseHandler = DatabaseHandler(requireContext())
-        val orderList = databaseHandler.getOrderByDate(date)
+        val orderList = databaseHandler.getOrderByStatusAndDate("Success", date)
         return orderList
+    }
+
+    private fun getLogPenjualanStok(date : String) : ArrayList<LogStokData>{
+        val databaseHandler = DatabaseHandler(requireContext())
+        val logStokList = databaseHandler.getLogStockNameAndSumByOrderDate(date)
+        return logStokList
     }
 }

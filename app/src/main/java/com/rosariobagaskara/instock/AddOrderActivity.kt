@@ -65,6 +65,7 @@ class AddOrderActivity : AppCompatActivity()
             var stokProdukHashMapDb : HashMap<String, String> = HashMap<String, String>()
             var statusStokHabis: Int = 0
             var itemStokHabis: String = ""
+            var totalGalon: Int = 0
             for(i in 0 until layoutCount){
                 val child = layoutListAddProduk.getChildAt(i)
                 val produkSpinner = child.findViewById<Spinner>(R.id.pilihProdukSpinner)
@@ -73,11 +74,15 @@ class AddOrderActivity : AppCompatActivity()
                 val selectedObject = produkSpinner.selectedItem as ProdukData
                 val hargaProduk = databaseHandler.getHargaProdukByProdukId(selectedObject.produkId)
                 val totalHarga = hargaProduk * Integer.parseInt(quantityProduk.text.toString())
+                totalGalon = Integer.parseInt(selectedObject.galonLiterValue.toString()) * Integer.parseInt(quantityProduk.text.toString())
                 orderHashMapProduk = hashMapOf(
                     "ID" to selectedObject.produkId.toString(),
                     "NamaProduk" to selectedObject.namaProduk,
+                    "JenisProduk" to selectedObject.jenisProduk,
                     "QuantityProduk" to quantityProduk.text.toString(),
-                    "HargaProduk" to totalHarga.toString())
+                    "HargaProduk" to totalHarga.toString(),
+                    "Liter" to totalGalon.toString()
+                )
                 orderHashMap[i.toString()] = orderHashMapProduk
 
                 val itemProduk = databaseHandler.viewItemProdukByProdukId(selectedObject.produkId)
@@ -128,6 +133,7 @@ class AddOrderActivity : AppCompatActivity()
                                         stokProdukHashMapDb = databaseHandler.getStockById(Integer.parseInt(indexStock.get("ID")))
                                         stokUpdate = Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) - (Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"]))
                                         statusUpdateStok = databaseHandler.updateItemStokQuantityById(Integer.parseInt(stokProdukHashMapDb["ID"]), stokUpdate)
+                                        databaseHandler.addLogStok(LogStokData(0, currentDateString, currentDateString, stokProdukHashMapDb["NamaStok"].toString(), (Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"])), "Order"))
                                     }
                                 }
                             }

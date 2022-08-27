@@ -9,7 +9,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.rosariobagaskara.instock.databinding.ActivityMainBinding
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.json.JSONObject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class MainActivity : AppCompatActivity() {
@@ -126,7 +130,8 @@ class MainActivity : AppCompatActivity() {
 
     fun cancelOrder(orderData: OrderData){
         var builder = AlertDialog.Builder(this)
-
+        val currentDate = LocalDateTime.now()
+        val currentDateString = currentDate.format(DateTimeFormatter.ISO_DATE)
         builder.setTitle("Cancel Order")
         builder.setMessage("Yakin ingin cancel order #${orderData.orderId}?")
         builder.setIcon(android.R.drawable.ic_dialog_alert)
@@ -138,7 +143,37 @@ class MainActivity : AppCompatActivity() {
             val status = databaseHandler.cancelOrder(OrderData(orderData.orderId, "", "", "Canceled", hashMapOf()))
 
             if(status > -1){
-                Toast.makeText(this, "Order berhasil dicancel!", Toast.LENGTH_SHORT).show()
+                var statusUpdateStok = -1
+                val orderById = databaseHandler.getOrderById(orderData.orderId)
+                Log.e("tesCancel", orderData.orderId.toString())
+                val JsonProdukOrderHashMap = JSONObject(orderById.orderProduk as Map<String, Map<String, String>>)
+                Log.e("tesCancel", JsonProdukOrderHashMap.toString())
+                val orderHashMap = Json.decodeFromString<Map<String, Map<String, String>>>(JsonProdukOrderHashMap.toString())
+                var stokProdukHashMapDb : HashMap<String, String> = HashMap<String, String>()
+                var stokUpdate :Int = 0
+                for (i in 0 until orderHashMap.size){
+                    val index = orderHashMap[i.toString()]
+
+                    if (index != null) {
+                        val itemProduk = databaseHandler.viewItemProdukByProdukId(Integer.parseInt(index.get("ID")))
+                        Log.e("tesCancel", index.get("ID").toString())
+                        val JsonStockProdukHashMap = JSONObject(itemProduk as Map<String, Map<String, String>>)
+                        val stockProdukHashMap = Json.decodeFromString<Map<String, Map<String, String>>>(JsonStockProdukHashMap.toString())
+                        for (i in 0 until stockProdukHashMap.size) {
+                            val indexStock = stockProdukHashMap[i.toString()]
+                            Log.e("tesCancel", stockProdukHashMap[i.toString()].toString())
+                            if(indexStock != null){
+                                stokProdukHashMapDb = databaseHandler.getStockById(Integer.parseInt(indexStock.get("ID")))
+                                stokUpdate = Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) + (Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"]))
+                                statusUpdateStok = databaseHandler.updateItemStokQuantityById(Integer.parseInt(stokProdukHashMapDb["ID"]), stokUpdate)
+                                databaseHandler.addLogStok(LogStokData(0, currentDateString, orderById.dateOrder, stokProdukHashMapDb["NamaStok"].toString(), -(Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"])), "Cancel"))
+                            }
+                        }
+                    }
+                    if(statusUpdateStok > -1){
+                        Toast.makeText(this, "Order berhasil dicancel!", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
             dialogInterface.dismiss()
         }

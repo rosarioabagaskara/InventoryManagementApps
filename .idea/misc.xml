@@ -28,6 +28,9 @@
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_order.xml" value="0.12903225806451613" />
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_order_add_produk.xml" value="0.264" />
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_pendapatan.xml" value="0.16589861751152074" />
+        <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_pendapatan_galon.xml" value="0.20153985507246377" />
+        <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_pendapatan_laundry.xml" value="0.12613981762917933" />
+        <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_penjualan_stok.xml" value="0.12613981762917933" />
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_produk.xml" value="0.20153985507246377" />
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_produk_add_item.xml" value="0.20153985507246377" />
         <entry key="..\:/KotlinPractice/InStockApp/app/src/main/res/layout/list_stock.xml" value="0.20153985507246377" />
