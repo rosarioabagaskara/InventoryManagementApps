@@ -1,7 +1,6 @@
 package com.rosariobagaskara.instock
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.serialization.decodeFromString
@@ -119,7 +118,6 @@ class AddOrderActivity : AppCompatActivity()
                         var statusUpdateStok = -1
 
                         for (i in 0 until orderHashMap.size){
-                            Log.e("tes", orderHashMap.toString())
 
                             val index = orderHashMap[i.toString()]
 

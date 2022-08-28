@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
@@ -300,7 +299,6 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         val orderList : ArrayList<OrderData> = ArrayList<OrderData>()
 
         val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderStatus = '$status' AND $orderDate BETWEEN '$date1' AND '$date2'"
-        Log.e("tesRange", selectQuery)
         val db = this.readableDatabase
         var cursor: Cursor? = null
 
@@ -494,9 +492,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             do{
                 name = cursor.getString(cursor.getColumnIndex(logStokName))
                 quantity = cursor.getInt(cursor.getColumnIndex(logStokQuantity))
-                Log.e("ld", name)
                 val ld = LogStokData(0,"","", name, quantity, "")
-                Log.e("LD", ld.toString())
                 logStokList.add(ld)
             }while(cursor.moveToNext())
 

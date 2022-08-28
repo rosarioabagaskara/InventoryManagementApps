@@ -2,7 +2,6 @@ package com.rosariobagaskara.instock
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -144,9 +143,7 @@ class MainActivity : AppCompatActivity() {
             if(status > -1){
                 var statusUpdateStok = -1
                 val orderById = databaseHandler.getOrderById(orderData.orderId)
-                Log.e("tesCancel", orderData.orderId.toString())
                 val JsonProdukOrderHashMap = JSONObject(orderById.orderProduk as Map<String, Map<String, String>>)
-                Log.e("tesCancel", JsonProdukOrderHashMap.toString())
                 val orderHashMap = Json.decodeFromString<Map<String, Map<String, String>>>(JsonProdukOrderHashMap.toString())
                 var stokProdukHashMapDb : HashMap<String, String> = HashMap<String, String>()
                 var stokUpdate :Int = 0
@@ -155,12 +152,10 @@ class MainActivity : AppCompatActivity() {
 
                     if (index != null) {
                         val itemProduk = databaseHandler.viewItemProdukByProdukId(Integer.parseInt(index.get("ID")))
-                        Log.e("tesCancel", index.get("ID").toString())
                         val JsonStockProdukHashMap = JSONObject(itemProduk as Map<String, Map<String, String>>)
                         val stockProdukHashMap = Json.decodeFromString<Map<String, Map<String, String>>>(JsonStockProdukHashMap.toString())
                         for (i in 0 until stockProdukHashMap.size) {
                             val indexStock = stockProdukHashMap[i.toString()]
-                            Log.e("tesCancel", stockProdukHashMap[i.toString()].toString())
                             if(indexStock != null){
                                 stokProdukHashMapDb = databaseHandler.getStockById(Integer.parseInt(indexStock.get("ID")))
                                 stokUpdate = Integer.parseInt(stokProdukHashMapDb["QuantityStok"]) + (Integer.parseInt(indexStock["QuantityStok"]) * Integer.parseInt(index["QuantityProduk"]))
