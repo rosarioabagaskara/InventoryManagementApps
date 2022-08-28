@@ -11,9 +11,6 @@ import android.util.Log
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
@@ -299,11 +296,11 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     @SuppressLint("Range")
-    fun getOrderByStatusAndDate(status:String, date: String): ArrayList<OrderData>{
+    fun getOrderByStatusAndDate(status:String, date1: String, date2: String): ArrayList<OrderData>{
         val orderList : ArrayList<OrderData> = ArrayList<OrderData>()
 
-        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderStatus = '$status' AND $orderDate = '$date'"
-        Log.e("tes", selectQuery)
+        val selectQuery = "SELECT * FROM $TABLE_ORDER WHERE $orderStatus = '$status' AND $orderDate BETWEEN '$date1' AND '$date2'"
+        Log.e("tesRange", selectQuery)
         val db = this.readableDatabase
         var cursor: Cursor? = null
 
@@ -478,9 +475,9 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     @SuppressLint("Range")
-    fun getLogStockNameAndSumByOrderDate(date: String): ArrayList<LogStokData> {
+    fun getLogStockNameAndSumByOrderDate(date1: String, date2: String): ArrayList<LogStokData> {
         var logStokList : ArrayList<LogStokData> = ArrayList<LogStokData>()
-        val selectQuery = "SELECT $logStokName, SUM($logStokQuantity) AS $logStokQuantity FROM $TABLE_LOG_STOK WHERE $logStokOrderDate = '$date' GROUP BY $logStokName"
+        val selectQuery = "SELECT $logStokName, SUM($logStokQuantity) AS $logStokQuantity FROM $TABLE_LOG_STOK WHERE $logStokOrderDate BETWEEN '$date1' AND '$date2' GROUP BY $logStokName"
 
         val db = this.readableDatabase
         var cursor: Cursor? = null

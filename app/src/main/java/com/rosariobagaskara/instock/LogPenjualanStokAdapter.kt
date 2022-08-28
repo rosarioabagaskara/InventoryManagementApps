@@ -8,12 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import org.json.JSONObject
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.*
 
 class LogPenjualanStokAdapter(private val logStokList: ArrayList<LogStokData>): RecyclerView.Adapter<LogPenjualanStokAdapter.MyViewHolder>() {
 
@@ -24,7 +18,6 @@ class LogPenjualanStokAdapter(private val logStokList: ArrayList<LogStokData>): 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = logStokList[position]
-        Log.e("tes", logStokList[position].logStokName)
         if(position %2 == 0) {
             holder.penjualanStokCardView.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }else {

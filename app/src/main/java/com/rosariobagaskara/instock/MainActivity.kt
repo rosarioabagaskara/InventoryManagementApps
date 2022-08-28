@@ -1,12 +1,11 @@
 package com.rosariobagaskara.instock
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.rosariobagaskara.instock.databinding.ActivityMainBinding
 import kotlinx.serialization.decodeFromString

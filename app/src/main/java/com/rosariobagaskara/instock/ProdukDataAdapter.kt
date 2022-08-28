@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
-import java.util.ArrayList
 
 class ProdukDataAdapter(private val c: Context, private val produkList: ArrayList<ProdukData>): RecyclerView.Adapter<ProdukDataAdapter.MyViewHolder>() {
 

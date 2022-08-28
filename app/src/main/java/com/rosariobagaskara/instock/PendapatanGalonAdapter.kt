@@ -12,7 +12,6 @@ import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
 
 class PendapatanGalonAdapter(private val orderList: ArrayList<OrderData>): RecyclerView.Adapter<PendapatanGalonAdapter.MyViewHolder>() {
 

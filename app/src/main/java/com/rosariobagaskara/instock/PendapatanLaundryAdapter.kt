@@ -1,7 +1,6 @@
 package com.rosariobagaskara.instock
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
 
 class PendapatanLaundryAdapter(private val orderList: ArrayList<OrderData>): RecyclerView.Adapter<PendapatanLaundryAdapter.MyViewHolder>() {
 
